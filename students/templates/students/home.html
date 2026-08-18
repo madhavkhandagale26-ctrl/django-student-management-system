@@ -1,0 +1,185 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Dashboard - Student Management</title>
+
+    <link rel="stylesheet"
+          href="{% static 'students/style.css' %}">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Student Management
+        </div>
+
+        <div>
+            <a href="{% url 'home' %}">Dashboard</a>
+            <a href="{% url 'add_student' %}">Add Student</a>
+            <a href="{% url 'students' %}">Students</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Dashboard -->
+
+    <div class="container">
+
+        <div class="hero">
+
+            <h1>
+    Welcome, {{ request.user.username }}! 👋
+</h1>
+
+<p>
+    Email: {{ request.user.email }}
+
+</p>
+        </div>
+
+        <div class="card">
+
+    <h2>Account Information</h2>
+
+    <p>
+        <strong>Username:</strong>
+        {{ request.user.username }}
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        {{ request.user.email }}
+    </p>
+
+    <p>
+        <strong>Joined:</strong>
+        {{ request.user.date_joined|date:"d M Y" }}
+    </p>
+
+</div>
+
+        <!-- Total Students -->
+
+        <div class="stats">
+
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p>{{ total_students }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Courses</h3>
+        <p>{{ total_courses }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Recent Students</h3>
+        <p>{{ recent_students|length }}</p>
+    </div>
+
+</div>
+
+
+        <!-- Buttons -->
+
+        <div style="text-align: center; margin: 25px 0;">
+
+            <a class="btn"
+               href="{% url 'add_student' %}">
+                + Add Student
+            </a>
+
+            <a class="btn"
+               href="{% url 'students' %}">
+                View All Students
+            </a>
+
+        </div>
+
+
+        <!-- Recent Students -->
+
+        <div class="table-card">
+
+    <h2>Students by Course</h2>
+
+    <br>
+
+    <div class="chart-card">
+
+    <h2>Students by Course</h2>
+
+    <div class="chart">
+
+        {% for item in course_counts %}
+
+        <div class="bar-item">
+
+            <div class="bar-label">
+                {{ item.course }}
+            </div>
+
+            <div class="bar-container">
+
+                <div
+                    class="bar"
+                    style="width: {% widthratio item.total total_students 100 %}%;">
+                    {{ item.total }}
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p>No course data available.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+    <table>
+
+        <tr>
+            <th>Course</th>
+            <th>Total Students</th>
+        </tr>
+
+        {% for item in course_counts %}
+
+        <tr>
+            <td>{{ item.course }}</td>
+            <td>{{ item.total }}</td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="2">
+                No course data available.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+    </div>
+
+</body>
+</html>
